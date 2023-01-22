@@ -24,7 +24,7 @@ jobs:
         with:
           header: JMeter Action Results
           message: |
-            JMeterを実行しました
+            Release ${{ github.sha }} to <https://pr-${{ github.event.number }}.example.com>
 
       - uses: actions/upload-artifact@v2
         with:
