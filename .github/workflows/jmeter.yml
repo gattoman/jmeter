@@ -11,7 +11,7 @@ jobs:
   action_build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Run JMeter Action on a test
         uses: rbhadti94/apache-jmeter-action@v0.6.0
@@ -19,14 +19,19 @@ jobs:
           testFilePath: jmeter/plan.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
+      # ここはS3になる
+      - uses: actions/upload-artifact@v3
+        with:
+          name: jmeter-test-results
+          path: reports/
+      - uses: actions/download-artifact@v3
+        id: download
+        with:
+          name: statistics.json
+          path: jmeter-test-results/statistics.json
       - name: Comment JMeter Action results
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: JMeter Action Results
           message: |
-            Release ${{ github.sha }} to <https://pr-${{ github.event.number }}.example.com>
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: jmeter-test-results
-          path: result.jtl
+            JMeterを実行しました
