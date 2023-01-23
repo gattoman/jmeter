@@ -28,7 +28,7 @@ jobs:
         id: download
         with:
           name: statistics.json
-          path: jmeter-test-results/statistics.json
+          path: /jmeter-test-results/statistics.json
       - name: Comment JMeter Action results
         uses: marocchino/sticky-pull-request-comment@v2
         with:
