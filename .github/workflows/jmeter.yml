@@ -25,10 +25,13 @@ jobs:
           name: jmeter-test-results
           path: reports/
       - uses: actions/download-artifact@v3
-        id: download
-        with:
-          name: statistics.json
-          path: /jmeter-test-results/statistics.json
+      - name: Display structure of downloaded files
+        run: ls -R
+        # with:
+        #   name: statistics.json
+        #   path: /jmeter-test-results/statistics.json
+      - name: 'Echo download path'
+        run: echo ${{steps.download.outputs.download-path}}
       - name: Comment JMeter Action results
         uses: marocchino/sticky-pull-request-comment@v2
         with:
