@@ -56,7 +56,7 @@ jobs:
             const path = require('path');
             const content = fs.readFileSync(path.resolve('./reports/statistics.json'), 'utf8');
             const json = JSON.parse(content);
-            const result = json['HTTP Request']['minResTime;
+            const result = json['HTTP Request']['minResTime'];
             console.log(result);
             github.issues.createComment({
               issue_number: context.issue.number,
