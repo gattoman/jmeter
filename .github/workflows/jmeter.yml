@@ -22,19 +22,29 @@ jobs:
       # ここはS3になる
       - uses: actions/upload-artifact@v3
         with:
-          name: jmeter-test-results
+          name: result
           path: reports/
-      - uses: actions/download-artifact@v3
-      - name: Display structure of downloaded files
-        run: ls -R
-        # with:
-        #   name: statistics.json
-        #   path: /jmeter-test-results/statistics.json
-      - name: 'Echo download path'
-        run: echo ${{steps.download.outputs.download-path}}
+      # - name: 'ls'
+      #  run: ls -lhaR ${{steps.download.outputs.download-path}}
       - name: Comment JMeter Action results
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: JMeter Action Results
           message: |
             JMeterを実行しました
+      # - name: change owner of vender directory(some files owner is root)
+      #  run: sudo chown -R runner:docker ./reports
+      - name: 'cat json'
+        run: cat ./reports/statistics.json
+      - name: Set json content to context
+        id: json_parse
+        run: |
+          content=`cat ./reports/statistics.json`
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          content="${content//'HTTP R'/'HTTPR'}"
+          echo "statistics=$content" >> $GITHUB_OUTPUT
+      - name: Echo
+        run: |
+          echo "${{fromJson(steps.json_parse.outputs.statistics).Total}}"
