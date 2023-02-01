@@ -47,4 +47,3 @@ jobs:
           echo "statistics=$content" >> $GITHUB_OUTPUT
           echo "${{steps.json_parse.outputs.statistics}}"
           echo "${{fromJson(steps.json_parse.outputs.statistics).Total}}"
-          # echo "${{fromJson($content).Total}}"
