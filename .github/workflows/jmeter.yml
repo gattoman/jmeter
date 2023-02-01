@@ -54,7 +54,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const content = fs.readFileSync(path.resolve(__dirname, './reports/statistics.json'), 'utf8');
+            const content = fs.readFileSync(path.resolve('./reports/statistics.json'), 'utf8');
             const json = JSON.parse(content);
             const result = json['HTTP Request']['All Threads']['All Samples']['Average'];
             console.log(result);
