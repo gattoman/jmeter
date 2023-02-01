@@ -47,3 +47,20 @@ jobs:
           echo $content
           echo "statistics=$content" >> $GITHUB_OUTPUT
           echo "${{steps.json_parse.outputs.statistics}}"
+      - name: 'script'
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(path.resolve(__dirname, './reports/statistics.json'), 'utf8');
+            const json = JSON.parse(content);
+            const result = json['HTTP Request']['All Threads']['All Samples']['Average'];
+            console.log(result);
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `平均レスポンス時間は${result}msです`
+            })
