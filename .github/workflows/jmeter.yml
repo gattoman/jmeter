@@ -45,6 +45,11 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           content="${content//'HTTP R'/'HTTPR'}"
           echo "statistics=$content" >> $GITHUB_OUTPUT
+          echo "${{fromJson(\$content).Total}}"
+        run: |
+          total=$(cat ./reports/statistics.json | jq -r .Total)
+          echo "total=${total}" >> $GITHUB_ENV
       - name: Echo
         run: |
           echo "${{fromJson(steps.json_parse.outputs.statistics).Total}}"
+          echo "\$total\"
