@@ -45,6 +45,5 @@ jobs:
           content="${content//$'\r'/' '}"
           content="${content//'HTTP R'/'HTTPR'}"
           echo $content
-          echo "${{fromJson({$content}).Total}}"
           echo "statistics=$content" >> $GITHUB_OUTPUT
           echo "${{steps.json_parse.outputs.statistics}}"
