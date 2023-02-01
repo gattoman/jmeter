@@ -40,8 +40,7 @@ jobs:
         id: json_parse
         run: |
           total=$(cat ./reports/statistics.json | jq -r .Total)
-          echo "total=${total}" >> $GITHUB_ENV
+          echo "total=${total}" >> $GITHUB_OUTPUT
       - name: Echo
         run: |
-          echo "${{fromJson(steps.json_parse.outputs.statistics).Total}}"
-          echo "\$total\"
+          echo "${{steps.json_parse.outputs.total}"
