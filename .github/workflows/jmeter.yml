@@ -43,4 +43,4 @@ jobs:
           echo "total=${total}" >> $GITHUB_OUTPUT
       - name: Echo
         run: |
-          echo "${{steps.json_parse.outputs.total}"
+          echo "${{steps.json_parse.outputs.total}}"
