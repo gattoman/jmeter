@@ -46,4 +46,3 @@ jobs:
           content="${content//'HTTP R'/'HTTPR'}"
           echo "statistics=$content" >> $GITHUB_OUTPUT
           echo "${{steps.json_parse.outputs.statistics}}"
-          echo "${{fromJson(steps.json_parse.outputs.statistics).Total}}"
