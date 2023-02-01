@@ -39,13 +39,6 @@ jobs:
       - name: Set json content to context
         id: json_parse
         run: |
-          content=`cat ./reports/statistics.json`
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/'%0A'}"
-          content="${content//$'\r'/'%0D'}"
-          content="${content//'HTTP R'/'HTTPR'}"
-          echo "statistics=$content" >> $GITHUB_OUTPUT
-        run: |
           total=$(cat ./reports/statistics.json | jq -r .Total)
           echo "total=${total}" >> $GITHUB_ENV
       - name: Echo
