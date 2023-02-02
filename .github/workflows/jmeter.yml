@@ -24,16 +24,6 @@ jobs:
         with:
           name: result
           path: reports/
-      # - name: 'ls'
-      #  run: ls -lhaR ${{steps.download.outputs.download-path}}
-      - name: Comment JMeter Action results
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: JMeter Action Results
-          message: |
-            JMeterを実行しました
-      # - name: 'cat json'
-      #   run: cat ./reports/statistics.json
       - name: 'script'
         id: set_params
         uses: actions/github-script@v6
@@ -64,7 +54,7 @@ jobs:
               body: body
             })
             return params;
-
+    steps:
       - name: Write to Google Sheet
         run: |
           curl -X POST \
