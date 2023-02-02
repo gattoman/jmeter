@@ -54,7 +54,6 @@ jobs:
               body: body
             })
             core.setOutput('params', JSON.stringify(params));
-    steps:
       - name: Write to Google Sheet
         run: |
           curl -X POST \
