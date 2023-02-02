@@ -66,8 +66,7 @@ jobs:
             })
       - name: Write to Google Sheet
         run: |
-          echo params \
           curl -X POST \
             -H "Content-Type: application/json" \
-            -d params \
+            -d ${params} \
             https://script.google.com/macros/s/AKfycbz71KOSwVy3l0SzrFRw4-QNqV0WLhSWsJJ8TGqh-MAI1yQwTwOCFlwtWXSxaYumjUQ0MA/exec
