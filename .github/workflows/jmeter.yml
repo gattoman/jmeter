@@ -53,7 +53,7 @@ jobs:
               repo: context.repo.repo,
               body: body
             })
-            return params;
+            core.setOutput('params', JSON.stringify(params));
     steps:
       - name: Write to Google Sheet
         run: |
