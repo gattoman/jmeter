@@ -45,13 +45,24 @@ jobs:
             const path = require('path');
             const content = fs.readFileSync(path.resolve('./reports/statistics.json'), 'utf8');
             const json = JSON.parse(content);
-            const result = json['HTTP Request']['minResTime'];
-            console.log(result);
+            const params = {
+              minResTime: json['HTTP Request']['minResTime'],
+              maxResTime: json['HTTP Request']['maxResTime'],
+              sampleCount: json['HTTP Request']['sampleCount'],
+              errorCount: json['HTTP Request']['errorCount'],
+              meanResTime: json['HTTP Request']['meanResTime'],
+            };
+            const body = `
+              sampleCount: ${params.sampleCount}ms
+              errorCount: ${params.errorCount}ms
+              minResTime: ${params.minResTime}ms
+              maxResTime: ${params.maxResTime}ms
+              meanResTime: ${params.meanResTime}ms `;
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `平均レスポンス時間は${result}msです`
+              body: body
             })
       - name: Write to Google Sheet
         run: |
