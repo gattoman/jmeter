@@ -36,17 +36,6 @@ jobs:
       #  run: sudo chown -R runner:docker ./reports
       - name: 'cat json'
         run: cat ./reports/statistics.json
-      - name: Set json content to context
-        id: json_parse
-        run: |
-          content=`cat ./reports/statistics.json`
-          content="${content//'%'/'%25'}"
-          content="${content//$'\n'/' '}"
-          content="${content//$'\r'/' '}"
-          content="${content//'HTTP R'/'HTTPR'}"
-          echo $content
-          echo "statistics=$content" >> $GITHUB_OUTPUT
-          echo "${{steps.json_parse.outputs.statistics}}"
       - name: 'script'
         uses: actions/github-script@v3
         with:
@@ -64,3 +53,9 @@ jobs:
               repo: context.repo.repo,
               body: `平均レスポンス時間は${result}msです`
             })
+      - name: Write to Google Sheet
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{ "sampleCount": 10, "errorCount": 0, "meanResTime": 50.0, "minResTime": 21.0, "maxResTime": 64 }' \
+            https://script.google.com/macros/s/AKfycbz71KOSwVy3l0SzrFRw4-QNqV0WLhSWsJJ8TGqh-MAI1yQwTwOCFlwtWXSxaYumjUQ0MA/exec
