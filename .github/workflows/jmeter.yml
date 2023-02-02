@@ -53,8 +53,8 @@ jobs:
               meanResTime: json['HTTP Request']['meanResTime'],
             };
             const body = `
-              sampleCount: ${params.sampleCount}ms
-              errorCount: ${params.errorCount}ms
+              sampleCount: ${params.sampleCount}
+              errorCount: ${params.errorCount}
               minResTime: ${params.minResTime}ms
               maxResTime: ${params.maxResTime}ms
               meanResTime: ${params.meanResTime}ms `;
@@ -68,5 +68,5 @@ jobs:
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
-            -d '{ "sampleCount": 10, "errorCount": 0, "meanResTime": 50.0, "minResTime": 21.0, "maxResTime": 64 }' \
+            -d params \
             https://script.google.com/macros/s/AKfycbz71KOSwVy3l0SzrFRw4-QNqV0WLhSWsJJ8TGqh-MAI1yQwTwOCFlwtWXSxaYumjUQ0MA/exec
