@@ -56,6 +56,7 @@ jobs:
             core.setOutput('params', params);
       - name: Write to Google Sheet
         run: |
+          echo ${{ steps.set_params.outputs.params }}
           curl -X POST \
             -H "Content-Type: application/json" \
             -d ${{steps.set_params.outputs.params}} \
