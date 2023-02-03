@@ -56,7 +56,7 @@ jobs:
             core.setOutput('params', params);
       - name: s3 upload
         env:
-          S3_PATH: styly-dev-static/api/jmeter
+          S3_PATH: api/jmeter
         run: |
           now = $(date "+%Y%m%d%H%M%S")
           echo S3_PATH + "/${now}"
