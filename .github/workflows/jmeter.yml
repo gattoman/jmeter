@@ -21,11 +21,11 @@ jobs:
           args: "--loglevel INFO"
       - name: s3 upload
         env:
-          S3_PATH: api/jmeter
+          APATH: api/jmeter
         run: |
           now = $(date "+%Y%m%d%H%M%S")
           echo $now
-          echo S3_PATH + "/${now}"
+          echo APATH + "/${now}"
       - name: 'script'
         id: set_params
         uses: actions/github-script@v6
