@@ -32,7 +32,6 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const xmlhttp = new XMLHttpRequest();
             const content = fs.readFileSync(path.resolve('./reports/statistics.json'), 'utf8');
             const json = JSON.parse(content);
             const params = {
@@ -55,6 +54,12 @@ jobs:
               body: body
             })
             core.setOutput('params', params);
+      - name: s3 upload
+        env:
+          S3_PATH: styly-dev-static/api/jmeter
+        run: |
+          now = $(date "+%Y%m%d%H%M%S")
+          echo S3_PATH + "/${now}"
       - name: Write to Google Sheet
         run: |
           echo ${{ steps.set_params.outputs.params }}
