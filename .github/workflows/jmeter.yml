@@ -19,13 +19,23 @@ jobs:
           testFilePath: jmeter/plan.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
-      - name: s3 upload
+
+      - name: Upload jmeter reports to S3
         env:
-          S3_PATH: api/jmeter
+          S3_PATH: styly-dev-static/api/jmeter
         run: |
           now=$(date "+%Y%m%d%H%M%S")
-          echo $now
-          echo S3_PATH + "/${now}"
+          echo "URL=https://hoge.cc/api/jmeter/$now/index.html" >> $GITHUB_ENV
+
+      - name: Post comment for spec html
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: upload_jmeter_result
+          message: |
+            # JMeter Result
+            ${{env.URL}}
+
+
       - name: 'script'
         id: set_params
         uses: actions/github-script@v6
