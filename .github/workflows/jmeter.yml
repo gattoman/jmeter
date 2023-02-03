@@ -19,11 +19,13 @@ jobs:
           testFilePath: jmeter/plan.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
-      # ここはS3になる
-      - uses: actions/upload-artifact@v3
-        with:
-          name: result
-          path: reports/
+      - name: s3 upload
+        env:
+          S3_PATH: api/jmeter
+        run: |
+          now = $(date "+%Y%m%d%H%M%S")
+          echo $now
+          echo S3_PATH + "/${now}"
       - name: 'script'
         id: set_params
         uses: actions/github-script@v6
@@ -54,12 +56,6 @@ jobs:
               body: body
             })
             core.setOutput('params', params);
-      - name: s3 upload
-        env:
-          S3_PATH: api/jmeter
-        run: |
-          now = $(date "+%Y%m%d%H%M%S")
-          echo S3_PATH + "/${now}"
       - name: Write to Google Sheet
         run: |
           echo ${{ steps.set_params.outputs.params }}
