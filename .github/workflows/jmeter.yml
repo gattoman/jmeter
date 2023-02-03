@@ -19,13 +19,10 @@ jobs:
           testFilePath: jmeter/plan.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
-      - name: s3 upload
-        env:
-          APATH: api/jmeter
+      - name: test upload
         run: |
           now = $(date "+%Y%m%d%H%M%S")
           echo $now
-          echo APATH + "/${now}"
       - name: 'script'
         id: set_params
         uses: actions/github-script@v6
