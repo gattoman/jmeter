@@ -19,19 +19,57 @@ jobs:
           testFilePath: jmeter/plan.jmx
           outputReportsFolder: reports/
           args: "--loglevel INFO"
-      # ここはS3になる
-      - uses: actions/upload-artifact@v3
-        with:
-          name: jmeter-test-results
-          path: reports/
-      - uses: actions/download-artifact@v3
-        id: download
-        with:
-          name: statistics.json
-          path: /jmeter-test-results/statistics.json
-      - name: Comment JMeter Action results
+
+      - name: Upload jmeter reports to S3
+        env:
+          S3_PATH: styly-dev-static/api/jmeter
+        run: |
+          now=$(date "+%Y%m%d%H%M%S")
+          echo "URL=https://hoge.cc/api/jmeter/$now/index.html" >> $GITHUB_ENV
+
+      - name: Post comment for spec html
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: JMeter Action Results
+          header: upload_jmeter_result
           message: |
-            JMeterを実行しました
+            # JMeter Result
+            ${{env.URL}}
+      - name: 'script'
+        id: set_params
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const content = fs.readFileSync(path.resolve('./reports/statistics.json'), 'utf8');
+            const json = JSON.parse(content);
+            const params = {
+              minResTime: json['HTTP Request']['minResTime'],
+              maxResTime: json['HTTP Request']['maxResTime'],
+              sampleCount: json['HTTP Request']['sampleCount'],
+              errorCount: json['HTTP Request']['errorCount'],
+              meanResTime: json['HTTP Request']['meanResTime'],
+              url: '${{env.URL}}',
+            };
+            const body = `
+              url: '${{env.URL}}',
+              sampleCount: ${params.sampleCount}
+              errorCount: ${params.errorCount}
+              minResTime: ${params.minResTime}ms
+              maxResTime: ${params.maxResTime}ms
+              meanResTime: ${params.meanResTime}ms `;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
+            core.setOutput('params', params);
+      - name: Write to Google Sheet
+        run: |
+          echo ${{ steps.set_params.outputs.params }}
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '${{steps.set_params.outputs.params}}' \
+            https://script.google.com/macros/s/AKfycbxGUi6hMrOX7sPgsJGzmtwNyb42MSKteWjT5ynG6Y73mO4ORJIcjwYYZT6ibzIEh1c61A/exec
