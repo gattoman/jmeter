@@ -34,8 +34,6 @@ jobs:
           message: |
             # JMeter Result
             ${{env.URL}}
-
-
       - name: 'script'
         id: set_params
         uses: actions/github-script@v6
@@ -52,8 +50,10 @@ jobs:
               sampleCount: json['HTTP Request']['sampleCount'],
               errorCount: json['HTTP Request']['errorCount'],
               meanResTime: json['HTTP Request']['meanResTime'],
+              url: '${{env.URL}}',
             };
             const body = `
+              url: '${{env.URL}}',
               sampleCount: ${params.sampleCount}
               errorCount: ${params.errorCount}
               minResTime: ${params.minResTime}ms
@@ -72,4 +72,4 @@ jobs:
           curl -X POST \
             -H "Content-Type: application/json" \
             -d '${{steps.set_params.outputs.params}}' \
-            https://script.google.com/macros/s/AKfycbz71KOSwVy3l0SzrFRw4-QNqV0WLhSWsJJ8TGqh-MAI1yQwTwOCFlwtWXSxaYumjUQ0MA/exec
+            https://script.google.com/macros/s/AKfycbxGUi6hMrOX7sPgsJGzmtwNyb42MSKteWjT5ynG6Y73mO4ORJIcjwYYZT6ibzIEh1c61A/exec
